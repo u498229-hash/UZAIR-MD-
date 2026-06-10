@@ -28,7 +28,8 @@ module.exports = {
   description: '🎨 Generate an AI image from text',
   usage: '.imagine <description>',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { reply, react, from } = extra;
     const prompt = args ? args.join(' ').trim() : '';
 

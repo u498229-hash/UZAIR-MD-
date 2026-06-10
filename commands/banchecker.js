@@ -19,7 +19,8 @@ module.exports = {
   description: '🔍 Check karo koi number WhatsApp par ban hai ya nahi',
   usage: '.banchecker <number>',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { reply, react, from } = extra;
 
     let number = args ? args.join('').trim() : '';

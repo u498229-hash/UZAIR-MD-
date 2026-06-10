@@ -57,7 +57,8 @@ module.exports = {
   description: '📱 Download APK files for Android apps',
   usage: '.apk <app name>\n📌 Example: .apk WhatsApp',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { reply, react, from } = extra;
 
     try {

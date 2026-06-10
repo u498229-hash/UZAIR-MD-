@@ -59,10 +59,11 @@ module.exports = {
   description: 'Take a screenshot of a website',
   usage: '.ssweb <url>\n📌 Example: .ssweb https://github.com',
   
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, from, reply, react, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     try {
       if (args.length === 0) {
-        return extra.reply(makeBox('SCREENSHOT', `❌ Please provide a website URL!
+        return reply(makeBox('SCREENSHOT', `❌ Please provide a website URL!
 ┃
 ┃ 📌 Example: .ssweb https://github.com
 ┃ 📌 Example: .ssweb https://google.com`));
@@ -71,12 +72,12 @@ module.exports = {
       const url = args.join(' ');
       
       if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        return extra.reply(makeBox('ERROR', `❌ Please provide a valid URL starting with http:// or https://`));
+        return reply(makeBox('ERROR', `❌ Please provide a valid URL starting with http:// or https://`));
       }
       
-      await extra.react('📸');
+      await react('📸');
       
-      await extra.reply(makeBox('SCREENSHOT', `📸 Taking screenshot of:
+      await reply(makeBox('SCREENSHOT', `📸 Taking screenshot of:
 ┃ 🔗 ${url}
 ┃ ⏳ Please wait...`));
       
@@ -86,23 +87,23 @@ module.exports = {
         throw new Error('Failed to capture screenshot');
       }
       
-      await sock.sendMessage(extra.from, {
+      await sock.sendMessage(from, {
         image: screenshotBuffer,
         caption: makeBox('SCREENSHOT', `🔗 ${url}
 ┃ 📸 Screenshot captured successfully!`)
       }, { quoted: msg });
       
-      await extra.react('✅');
+      await react('✅');
       
     } catch (error) {
       console.error('SSWeb command error:', error);
-      await extra.reply(makeBox('ERROR', `❌ Failed to screenshot website: ${error.message}
+      await reply(makeBox('ERROR', `❌ Failed to screenshot website: ${error.message}
 ┃
 ┃ 💡 Tips:
 ┃ • Make sure the URL is accessible
 ┃ • Try a different website
 ┃ • Example: .ssweb https://google.com`));
-      await extra.react('❌');
+      await react('❌');
     }
   }
 };

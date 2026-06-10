@@ -133,11 +133,12 @@ module.exports = {
   usage: '.install [-r] <gist_url>  OR  reply to a .js file with .install',
   ownerOnly: true,
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, from, reply, react, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     try {
       // Owner check
-      if (!extra.isOwner) {
-        return extra.reply('❌ Sirf Owner use kar sakta hai!');
+      if (!isOwner) {
+        return reply('❌ Sirf Owner use kar sakta hai!');
       }
 
       // Restart flag
@@ -152,7 +153,7 @@ module.exports = {
       // ── Method 1: Gist / Raw URL ──────────────────────
       if (filteredArgs.length > 0) {
         const rawUrl = gistToRawUrl(filteredArgs[0].trim());
-        await extra.react('⏳');
+        await react('⏳');
         const res = await axios.get(rawUrl, {
           timeout: 15000,
           responseType: 'text',
@@ -165,25 +166,25 @@ module.exports = {
       else {
         const quoted = msg.message?.extendedTextMessage?.contextInfo?.quotedMessage;
         if (!quoted) {
-          return extra.reply(
+          return reply(
             '❌ Gist URL do ya kisi `.js` file ko reply karke `.install` likho.\n' +
             '📌 Usage: ' + this.usage
           );
         }
         const doc = quoted.documentMessage;
-        if (!doc) return extra.reply('❌ Reply mein .js file honi chahiye.');
+        if (!doc) return reply('❌ Reply mein .js file honi chahiye.');
         if (!(doc.fileName || '').endsWith('.js')) {
-          return extra.reply('❌ Sirf `.js` JavaScript files install ho sakti hain.');
+          return reply('❌ Sirf `.js` JavaScript files install ho sakti hain.');
         }
 
-        await extra.react('⏳');
+        await react('⏳');
 
         // Baileys require — CommonJS safe
         let downloadMediaMessage;
         try {
           downloadMediaMessage = require('@whiskeysockets/baileys').downloadMediaMessage;
         } catch (e) {
-          return extra.reply('❌ Baileys load nahi hua: ' + e.message);
+          return reply('❌ Baileys load nahi hua: ' + e.message);
         }
 
         const buffer = await downloadMediaMessage(
@@ -270,9 +271,9 @@ module.exports = {
       if (autoRestart) {
         details.push('', '♻️ *Auto-restarting bot...*');
         details.push(`🕒 ${new Date().toLocaleString()}`);
-        await sock.sendMessage(extra.from, { text: details.join('\n') }, { quoted: msg });
-        await extra.react('✅');
-        await notifyPrimaryOwner(sock, pluginInfo, extra.sender);
+        await sock.sendMessage(from, { text: details.join('\n') }, { quoted: msg });
+        await react('✅');
+        await notifyPrimaryOwner(sock, pluginInfo, sender);
         restartBot();
       } else {
         const hotLoaded = typeof global.reloadCommands === 'function';
@@ -281,9 +282,9 @@ module.exports = {
           : '🔄 *Restart required to activate.*'
         );
         details.push(`🕒 ${new Date().toLocaleString()}`);
-        await sock.sendMessage(extra.from, { text: details.join('\n') }, { quoted: msg });
-        await extra.react('✅');
-        await notifyPrimaryOwner(sock, pluginInfo, extra.sender);
+        await sock.sendMessage(from, { text: details.join('\n') }, { quoted: msg });
+        await react('✅');
+        await notifyPrimaryOwner(sock, pluginInfo, sender);
       }
 
     } catch (error) {
@@ -291,8 +292,8 @@ module.exports = {
       const errMsg = error.response
         ? `HTTP ${error.response.status} — ${error.response.statusText}`
         : error.message;
-      await extra.reply(`❌ *Installation failed:*\n\n${errMsg}`);
-      await extra.react('❌');
+      await reply(`❌ *Installation failed:*\n\n${errMsg}`);
+      await react('❌');
     }
   }
 };

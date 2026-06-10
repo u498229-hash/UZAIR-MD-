@@ -15,7 +15,8 @@ const axios = require('axios');
 
 module.exports = {
   name: 'tginfo',
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, from, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { reply, react } = extra;
     let username = args.join(' ').replace('@', '').trim();
     if (!username) return reply("❌ Username do!");
@@ -35,7 +36,7 @@ module.exports = {
 
       let resultText = `👤 *Name:* ${name}\n🔗 *Username:* @${username}\n📝 *Bio:* ${desc}`;
       
-      await sock.sendMessage(extra.from, { 
+      await sock.sendMessage(from, { 
         image: { url: img }, 
         caption: resultText 
       }, { quoted: msg });

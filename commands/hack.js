@@ -52,7 +52,8 @@ module.exports = {
   description: '☠️ ULTRA terrifying hacking prank animation — BY UZAIR 🚨',
   usage: '.hack @target',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, reply, react, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { from } = extra;
     const target = args[0] || 'UNKNOWN DEVICE';
     const send = async (title, lines) => {
@@ -60,7 +61,7 @@ module.exports = {
       await delay(1200);
     };
 
-    await extra.react('⚠️');
+    await react('⚠️');
 
     // ── PHASE 0: SYSTEM COMPROMISE ──────────────────────
     await send('🌩️ PHASE 0: SYSTEM COMPROMISE', [

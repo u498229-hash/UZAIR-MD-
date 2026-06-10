@@ -75,7 +75,8 @@ module.exports = {
   description: '🔥 Get a funny roast',
   usage: '.roast',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { from, reply, react } = extra;
 
     try {

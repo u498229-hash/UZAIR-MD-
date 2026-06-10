@@ -22,7 +22,8 @@ module.exports = {
   description: '🔍 Image ko HD / 4K mein enhance karo AI se',
   usage: '.enhance (image reply karke)',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { reply, react, from } = extra;
 
     // ─── Check: image attached hai? ───

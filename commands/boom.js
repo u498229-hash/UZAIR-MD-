@@ -39,11 +39,12 @@ module.exports = {
   adminOnly: false,
   botAdminNeeded: false,
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, from, reply, react, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     try {
       const raw = args.join(' ').trim();
       if (!raw) {
-        return extra.reply(makeBox('BOOM COMMAND', `🔥 Unlimited Mode 🔥
+        return reply(makeBox('BOOM COMMAND', `🔥 Unlimited Mode 🔥
 ┃
 ┃ • .boom hello,100 (100 times in current chat)
 ┃ • .boom hey,500,923027598023 (500 times to that number)
@@ -58,7 +59,7 @@ module.exports = {
       const num = parts[2] || '';
 
       if (!message || isNaN(count) || count <= 0) {
-        return extra.reply(makeBox('ERROR', `❌ Invalid format
+        return reply(makeBox('ERROR', `❌ Invalid format
 ┃
 ┃ Use: .boom message,count[,number]
 ┃ Example: .boom Hello,1000,923001234567
@@ -70,15 +71,15 @@ module.exports = {
       if (num) {
         targetJid = toJid(num);
         if (!targetJid) {
-          return extra.reply(makeBox('ERROR', `❌ Invalid number
+          return reply(makeBox('ERROR', `❌ Invalid number
 ┃ Use format: 923001234567 (with country code)`));
         }
       } else {
-        targetJid = extra.from;
+        targetJid = from;
       }
 
-      await extra.react('⏳');
-      await extra.reply(makeBox('BOOM STARTED', `🚀 Starting boom!
+      await react('⏳');
+      await reply(makeBox('BOOM STARTED', `🚀 Starting boom!
 ┃ 📨 Sending: ${count} messages
 ┃ 🎯 Target: ${num ? '+' + num : 'current chat'}
 ┃ ⏱️ Delay: 300ms between messages`));
@@ -93,7 +94,7 @@ module.exports = {
           successCount++;
           
           if ((i + 1) % 100 === 0) {
-            await extra.reply(makeBox('PROGRESS', `📊 Progress: ${i + 1}/${count} messages sent`));
+            await reply(makeBox('PROGRESS', `📊 Progress: ${i + 1}/${count} messages sent`));
           }
           
         } catch (err) {
@@ -101,7 +102,7 @@ module.exports = {
           console.error(`Failed to send message ${i + 1}:`, err);
           
           if (failCount > 10) {
-            await extra.reply(makeBox('STOPPED', `❌ Stopped due to too many failures (${failCount})`));
+            await reply(makeBox('STOPPED', `❌ Stopped due to too many failures (${failCount})`));
             break;
           }
         }
@@ -115,8 +116,8 @@ module.exports = {
       const endTime = Date.now();
       const duration = ((endTime - startTime) / 1000).toFixed(1);
 
-      await extra.react('✅');
-      await extra.reply(makeBox('BOOM COMPLETE', `✅ Boom Complete!
+      await react('✅');
+      await reply(makeBox('BOOM COMPLETE', `✅ Boom Complete!
 ┃
 ┃ 📨 Sent: ${successCount}/${count}
 ┃ ❌ Failed: ${failCount}
@@ -125,8 +126,8 @@ module.exports = {
       
     } catch (error) {
       console.error('Boom command error:', error);
-      await extra.reply(makeBox('ERROR', `❌ An error occurred: ${error.message}`));
-      await extra.react('❌');
+      await reply(makeBox('ERROR', `❌ An error occurred: ${error.message}`));
+      await react('❌');
     }
   }
 };

@@ -49,7 +49,8 @@ module.exports = {
   description: '📁 Download public files from Google Drive',
   usage: '.gdrive <url>\n📌 Example: .gdrive https://drive.google.com/file/d/xxxxx/view',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { from, reply, react } = extra;
 
     const url = args.join(' ').trim();

@@ -25,10 +25,11 @@ module.exports = {
   description: 'Generate QR code from any link',
   usage: '.qr <url>\n📌 Example: .qr https://google.com',
   
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, from, reply, react, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     try {
       if (args.length < 1) {
-        return extra.reply(makeBox('QR GENERATOR', `📝 Usage: .qr <url>
+        return reply(makeBox('QR GENERATOR', `📝 Usage: .qr <url>
 ┃
 ┃ 📌 Examples:
 ┃ • .qr https://google.com
@@ -36,7 +37,7 @@ module.exports = {
 ┃ • .qr https://github.com`));
       }
 
-      await extra.react('📱');
+      await react('📱');
 
       let inputUrl = args.join(' ');
       
@@ -46,16 +47,16 @@ module.exports = {
       
       const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
       if (!urlPattern.test(inputUrl)) {
-        return extra.reply(makeBox('ERROR', `❌ Invalid URL!
+        return reply(makeBox('ERROR', `❌ Invalid URL!
 ┃
 ┃ 📌 Example: .qr https://google.com`));
       }
 
       if (inputUrl.length > 500) {
-        return extra.reply(makeBox('ERROR', `❌ URL too long! Maximum 500 characters.`));
+        return reply(makeBox('ERROR', `❌ URL too long! Maximum 500 characters.`));
       }
 
-      await extra.reply(makeBox('QR GENERATOR', `📱 Generating QR code...
+      await reply(makeBox('QR GENERATOR', `📱 Generating QR code...
 ┃ 🔗 Link: ${inputUrl}
 ┃ ⏳ Please wait.`));
 
@@ -95,13 +96,13 @@ module.exports = {
       const caption = makeBox('QR CODE GENERATED', `🔗 Link: ${inputUrl}
 ┃ 📱 Scan to open`);
 
-      await sock.sendMessage(extra.from, {
+      await sock.sendMessage(from, {
         image: { url: tempFile },
         caption: caption
       }, { quoted: msg });
       
       fs.unlinkSync(tempFile);
-      await extra.react('✅');
+      await react('✅');
       
     } catch (error) {
       console.error('QR Plugin Error:', error);
@@ -120,8 +121,8 @@ module.exports = {
         errorMessage += `📛 ${error.message}`;
       }
       
-      await extra.reply(makeBox('ERROR', errorMessage));
-      await extra.react('❌');
+      await reply(makeBox('ERROR', errorMessage));
+      await react('❌');
     }
   },
   

@@ -23,7 +23,8 @@ module.exports = {
   description: 'Get detailed smartphone specifications',
   usage: '.phoneinfo <phone_name>\n📌 Example: .phoneinfo poco f5',
   
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, from, reply, react, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     try {
       if (!args || args.length === 0) {
         const helpMsg = makeBox('PHONE INFO', `📝 Usage: .phoneinfo <phone_name>
@@ -34,15 +35,15 @@ module.exports = {
 ┃ • .phoneinfo samsung s23
 ┃
 ┃ 👨‍💻 Developer By UZAIR  Rai`);
-        await extra.reply(helpMsg);
+        await reply(helpMsg);
         return;
       }
 
-      await extra.react('📱');
+      await react('📱');
       
       const query = args.join(' ');
       
-      await extra.reply(makeBox('PHONE INFO', `🔍 Searching: "${query}"
+      await reply(makeBox('PHONE INFO', `🔍 Searching: "${query}"
 ┃ ⏳ Please wait...`));
       
       let data = null;
@@ -99,8 +100,8 @@ module.exports = {
 ┃ • .phoneinfo samsung galaxy s23
 ┃
 ┃ 👨‍💻 Developer By UZAIR  Rai`);
-        await extra.reply(notFoundMsg);
-        await extra.react('❌');
+        await reply(notFoundMsg);
+        await react('❌');
         return;
       }
       
@@ -213,18 +214,18 @@ module.exports = {
       
       if (data.imageUrl && data.imageUrl !== "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-f5-2.jpg") {
         try {
-          await sock.sendMessage(extra.from, {
+          await sock.sendMessage(from, {
             image: { url: data.imageUrl },
             caption: infoText
           }, { quoted: msg });
         } catch (imgError) {
-          await extra.reply(infoText);
+          await reply(infoText);
         }
       } else {
-        await extra.reply(infoText);
+        await reply(infoText);
       }
       
-      await extra.react('✅');
+      await react('✅');
       console.log('Phone Info Sent Successfully');
       
     } catch (error) {
@@ -239,8 +240,8 @@ module.exports = {
 ┃
 ┃ 👨‍💻 Developer By UZAIR  Rai`);
       
-      await extra.reply(errorMsg);
-      await extra.react('❌');
+      await reply(errorMsg);
+      await react('❌');
     }
   }
 };

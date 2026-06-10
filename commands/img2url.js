@@ -129,7 +129,8 @@ module.exports = {
   description: '🔗 Image ko URL mein convert karo',
   usage: '.img2url (image reply karo)',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { from, reply, react } = extra;
 
     try {

@@ -46,7 +46,8 @@ module.exports = {
   description: '🏆 Free Fire Pakistan Leaderboard Top 10',
   usage: '.ffrank [br/cs]',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, from, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { reply, react } = extra;
 
     const mode = args?.[0]?.toLowerCase() === 'cs' ? 'cs' : 'br';

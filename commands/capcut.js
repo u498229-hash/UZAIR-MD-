@@ -49,7 +49,8 @@ module.exports = {
   description: '🎬 Download original video from CapCut template',
   usage: '.capcut <url>\n📌 Example: .capcut https://www.capcut.com/t/xxxxx',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { from, reply, react } = extra;
 
     const url = args.join(' ').trim();

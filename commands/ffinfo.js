@@ -146,7 +146,8 @@ module.exports = {
   description: '🎮 Free Fire player info by UID',
   usage: '.ffinfo <UID>',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { reply, react, from } = extra;
 
     const uid    = args?.[0]?.trim() || '';

@@ -6,7 +6,8 @@ module.exports = {
   category: 'fun',
   description: '🐱 Get a random cat image',
   usage: '.cat',
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { reply, react, from } = extra;
     try {
       await react('🐱');

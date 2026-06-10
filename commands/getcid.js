@@ -21,7 +21,8 @@ module.exports = {
   description: '📢 Get WhatsApp Channel ID from invite link',
   usage: '.getcid <channel-invite-link>\n📌 Example: .getcid https://whatsapp.com/channel/xxxxx',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, from, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { reply, react } = extra;
 
     const link = args[0];

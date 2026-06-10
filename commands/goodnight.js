@@ -7,7 +7,8 @@ module.exports = {
   category: 'fun',
   description: '🌙 Get a sweet goodnight wish',
   usage: '.goodnight',
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, from, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { reply, react } = extra;
     try {
       await react('🌙');

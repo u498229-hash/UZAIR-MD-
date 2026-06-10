@@ -72,7 +72,8 @@ module.exports = {
   description: '📌 Download images from Pinterest (URL or search)',
   usage: '.pinterest <url or search query>\n📌 Example: .pinterest https://pin.it/xxxxx\n📌 Example: .pinterest beautiful nature',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { from, reply, react } = extra;
     const input = args.join(' ').trim();
 

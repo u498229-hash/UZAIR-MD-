@@ -61,7 +61,8 @@ module.exports = {
   description: '📝 Urdu/Hindi Shayari bhejo',
   usage: '.shayari or .shayari sad/romantic/motivational/friendship',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { reply, react, from } = extra;
 
     let type = args?.[0]?.toLowerCase()?.trim() || '';

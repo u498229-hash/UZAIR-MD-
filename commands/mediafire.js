@@ -49,7 +49,8 @@ module.exports = {
   description: '📁 Download files from MediaFire',
   usage: '.mediafire <url>\n📌 Example: .mediafire https://www.mediafire.com/file/xxxxx',
 
-  async execute(sock, msg, args, extra) {
+  async run(ctx) {
+    const { sock, msg, args, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
     const { from, reply, react } = extra;
 
     const url = args.join(' ').trim();

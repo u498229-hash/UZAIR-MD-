@@ -23,10 +23,11 @@ module.exports = {
     description: 'Get information about any phone number',
     usage: '.numberinfo <phone-number>\n📌 Example: .numberinfo 923001234567',
 
-    async execute(sock, msg, args, extra) {
+    async run(ctx) {
+    const { sock, msg, args, from, reply, react, sender, isOwner, isGroup, isAdmin, botNum, config } = ctx;
         try {
             if (!args.length) {
-                return extra.reply(makeBox('NUMBER INFO', `❌ Please provide a phone number!
+                return reply(makeBox('NUMBER INFO', `❌ Please provide a phone number!
 ┃
 ┃ 📝 Usage: .numberinfo 923018787786
 ┃
@@ -49,7 +50,7 @@ module.exports = {
             }
 
             if (phoneNumber.length < 11 || phoneNumber.length > 12) {
-                return extra.reply(makeBox('ERROR', `❌ Invalid phone number!
+                return reply(makeBox('ERROR', `❌ Invalid phone number!
 ┃
 ┃ Please enter a valid number.
 ┃
@@ -58,7 +59,7 @@ module.exports = {
 ┃ 👨‍💻 Developer By Ammar Rai`));
             }
 
-            await extra.react('⏳');
+            await react('⏳');
 
             const apiUrl = `https://ammar-all-international-number-sim.vercel.app/${phoneNumber}`;
             const response = await axios.get(apiUrl, { timeout: 15000 });
@@ -79,8 +80,8 @@ module.exports = {
 ┃
 ┃ 👨‍💻 DEVELOPER BY AMMAR RAI`);
 
-            await extra.reply(outputMessage);
-            await extra.react('✅');
+            await reply(outputMessage);
+            await react('✅');
 
         } catch (error) {
             console.error('Number Info Error:', error);
@@ -105,8 +106,8 @@ module.exports = {
 ┃
 ┃ 👨‍💻 DEVELOPER BY AMMAR RAI`;
 
-            await extra.reply(errorMessage);
-            await extra.react('❌');
+            await reply(errorMessage);
+            await react('❌');
         }
     }
 };
