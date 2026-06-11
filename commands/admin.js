@@ -1,0 +1,18 @@
+'use strict';
+const db = require('../database/db');
+const broadcast = async (ctx) => { if (!ctx.isOwner) return ctx.reply('❌ Owner only!'); await ctx.reply('📢 Broadcast feature — provide message after .broadcast'); };
+const restart = async (ctx) => { if (!ctx.isOwner) return ctx.reply('❌ Owner only!'); await ctx.reply('🔄 Restarting...'); setTimeout(() => process.exit(0), 1000); };
+const setppgc = async (ctx) => { await ctx.reply('🖼 setppgc coming soon!'); };
+const del = async (ctx) => { const q = ctx.msg.message?.extendedTextMessage?.contextInfo; if (!q) return ctx.reply('❌ Reply to a message!'); await ctx.sock.sendMessage(ctx.from, { delete: { remoteJid: ctx.from, fromMe: false, id: q.stanzaId, participant: q.participant } }); };
+const getpp = async (ctx) => { const jid = ctx.msg.message?.extendedTextMessage?.contextInfo?.participant || ctx.sender; try { const pp = await ctx.sock.profilePictureUrl(jid, 'image'); await ctx.sock.sendMessage(ctx.from, { image: { url: pp } }, { quoted: ctx.msg }); } catch { await ctx.reply('❌ No profile picture!'); } };
+const warn = async (ctx) => { await ctx.reply('⚠️ warn feature coming soon!'); };
+const resetwarn = async (ctx) => { await ctx.reply('✅ resetwarn coming soon!'); };
+const afk = async (ctx) => { await ctx.reply('💤 AFK mode coming soon!'); };
+const mode = async (ctx) => { if (!ctx.isOwner) return ctx.reply('❌ Owner only!'); const val = ctx.args[0]; if (!val) return ctx.reply('Use: .mode public/private'); db.setBotMode(ctx.cleanBotNum, val); await ctx.reply('Mode set: '+val); };
+const addowner = async (ctx) => { if (!ctx.isOwner) return ctx.reply('❌ Owner only!'); const num = ctx.args[0]?.replace(/[^0-9]/g,''); if (!num) return ctx.reply('❌ Provide number!'); db.addSecondOwner(ctx.cleanBotNum, num); await ctx.reply('✅ Owner added: '+num); };
+const removeowner = async (ctx) => { if (!ctx.isOwner) return ctx.reply('❌ Owner only!'); const num = ctx.args[0]?.replace(/[^0-9]/g,''); if (!num) return ctx.reply('❌ Provide number!'); db.removeSecondOwner(ctx.cleanBotNum, num); await ctx.reply('✅ Owner removed!'); };
+const welcome = async (ctx) => { await ctx.reply('👋 Welcome message feature coming soon!'); };
+const bye = async (ctx) => { await ctx.reply('👋 Bye message feature coming soon!'); };
+const pnotify = async (ctx) => { await ctx.reply('🔔 Notify feature coming soon!'); };
+const dnotify = async (ctx) => { await ctx.reply('🔕 Notify feature coming soon!'); };
+module.exports = { broadcast, restart, setppgc, del, getpp, warn, resetwarn, afk, mode, addowner, removeowner, welcome, bye, pnotify, dnotify };
